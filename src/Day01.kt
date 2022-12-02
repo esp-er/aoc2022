@@ -32,7 +32,6 @@ fun caloriesPerElf(input: String): List<Int>{
 fun solvePart1(input: String): Int{
     val elfCalorieList = caloriesPerElf(input)
     return elfCalorieList.max()
-    //lines.forEach{ println(it)}
 
 }
 
