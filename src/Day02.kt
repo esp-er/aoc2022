@@ -1,8 +1,28 @@
-enum class GameResult{
-    LOSS, DRAW, WIN
+operator fun String.component1(): Char { return this[0] }
+operator fun String.component2(): Char { return this[1] }
+operator fun String.component3(): Char { return this[2] }
+
+enum class GameResult(val score: Int){
+    LOSS(0), DRAW(3), WIN(6)
 }
 enum class Hand{
     ROCK, PAPER, SCISSOR
+}
+
+fun Hand.losesAgainst(): Hand{
+    return when(this){
+        Hand.ROCK -> Hand.PAPER
+        Hand.PAPER -> Hand.SCISSOR
+        Hand.SCISSOR -> Hand.ROCK
+    }
+}
+
+fun Hand.winsAgainst(): Hand{
+    return when(this){
+        Hand.ROCK -> Hand.SCISSOR
+        Hand.PAPER -> Hand.ROCK
+        Hand.SCISSOR -> Hand.PAPER
+    }
 }
 fun Char.toHand(): Hand{
     return when(this){
@@ -14,19 +34,16 @@ fun Char.toHand(): Hand{
 }
 
 fun playGame(playerHand: Hand, opponentHand: Hand): GameResult{
-    val hands = Pair(playerHand, opponentHand)
+    val hands = playerHand to opponentHand
 
-    //TODO: Find a more concise way to determine Game Result?
-    val result = when(hands){
-        Pair(Hand.ROCK, Hand.PAPER) -> GameResult.LOSS
-        Pair(Hand.ROCK, Hand.ROCK) -> GameResult.DRAW
-        Pair(Hand.ROCK, Hand.SCISSOR) -> GameResult.WIN
-        Pair(Hand.PAPER, Hand.SCISSOR) -> GameResult.LOSS
-        Pair(Hand.PAPER, Hand.PAPER) -> GameResult.DRAW
-        Pair(Hand.PAPER, Hand.ROCK) -> GameResult.WIN
-        Pair(Hand.SCISSOR, Hand.ROCK) -> GameResult.LOSS
-        Pair(Hand.SCISSOR, Hand.SCISSOR) -> GameResult.DRAW
-        Pair(Hand.SCISSOR, Hand.PAPER) -> GameResult.WIN
+    val result = when{
+        hands.first == hands.second -> GameResult.DRAW
+        hands == Hand.ROCK to Hand.PAPER -> GameResult.LOSS
+        hands == Hand.ROCK to Hand.SCISSOR -> GameResult.WIN
+        hands == Hand.PAPER to Hand.SCISSOR -> GameResult.LOSS
+        hands == Hand.PAPER to Hand.ROCK -> GameResult.WIN
+        hands == Hand.SCISSOR to Hand.ROCK -> GameResult.LOSS
+        hands == Hand.SCISSOR to Hand.PAPER -> GameResult.WIN
         else -> GameResult.DRAW
     }
     return result
@@ -34,24 +51,40 @@ fun playGame(playerHand: Hand, opponentHand: Hand): GameResult{
 
 fun calcPlayerScore(playerHand: Hand, result: GameResult): Int{
     val handScore = playerHand.ordinal + 1
-    val gameScore = result.ordinal * 3
+    val gameScore = result.score
     return handScore + gameScore
 }
 
+
+fun handToPlay(playerResult: Char, opponentHand: Hand): Hand{
+    return when(playerResult){
+        'X' -> opponentHand.winsAgainst()
+        'Y' ->  opponentHand
+        'Z' -> opponentHand.losesAgainst()
+        else -> opponentHand
+    }
+
+}
+
 fun solvePart1(inputList: List<String>): Int{
-   val gamesScores = inputList.map{ gameInput ->
-       val rawHands = gameInput.split(" ")
-       if(rawHands.size == 2){
-           val playerChar = rawHands.last().single()
-           val opponentChar = rawHands.first().single()
-           val gameResult = playGame(playerChar.toHand(), opponentChar.toHand())
-           calcPlayerScore(playerChar.toHand(), gameResult)
-       }
-       else{
-           0
-       }
+   val gamesScores = inputList.asSequence().filter(String::isNotBlank).map{ gameInput ->
+       val (opponentChar, _, playerChar) = gameInput
+       val gameResult = playGame(playerChar.toHand(), opponentChar.toHand())
+       calcPlayerScore(playerChar.toHand(), gameResult)
    }
    return gamesScores.sum()
+}
+
+fun solvePart2(inputList: List<String>): Int{
+    val gamesScores = inputList.asSequence().filter(String::isNotBlank).map{ gameInput ->
+        val (opponentChar, _, playerResult) = gameInput
+        val opponentHand = opponentChar.toHand()
+        val playerHand = handToPlay(playerResult, opponentHand)
+
+        val gameResult = playGame(playerHand, opponentHand)
+        calcPlayerScore(playerHand, gameResult)
+    }
+    return gamesScores.sum()
 }
 
 
@@ -63,6 +96,11 @@ fun main() {
 
     val input = readInput("Day02_input")
     println(solvePart1(input))
+
+
+    println("::day2:: part 2 :: ")
+    check(solvePart2(testInput) == 12)
+    println(solvePart2(input))
 }
 
 
