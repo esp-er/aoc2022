@@ -6,11 +6,8 @@ fun main() {
     val input = readInput("Day04_input")
 
     check(solvePart1(testInput) == 2)
-
     println(solvePart1(input))
-    println(solvePart2(testInput))
     println(solvePart2(input))
-    // test if implementation meets criteria from the description, like:
 }
 
 fun solvePart1(input: List<String>): Int{
@@ -30,8 +27,8 @@ fun solvePart2(input: List<String>): Int{
         val (firstStart, firstEnd) = pairs.first().split("-").map(String::toInt)
         val (secondStart, secondEnd) = pairs.last().split("-").map(String::toInt)
 
-        (firstStart in secondStart..secondEnd)
-                || (secondStart in firstStart..firstEnd)
+        (firstStart in secondStart..secondEnd) ||
+                (secondStart in firstStart..firstEnd)
 
     }.count{it}
 }
