@@ -1,12 +1,13 @@
 package patriker.day03
 import patriker.utils.*
 
-fun Char.priority(): Int{
-    if(this.isUpperCase()){
-        return this.code - 'A'.code + 27
+val Char.priority
+    get(): Int{
+        if(this.isUpperCase()){
+            return this.code - 'A'.code + 27
+        }
+        return this.code - 'a'.code + 1
     }
-    return this.code - 'a'.code + 1
-}
 
 fun main() {
     val testInput = readInput("Day03_test")
@@ -35,7 +36,7 @@ fun solvePart2(input: List<String>): Int{
     val commonItemScores =  input.chunked(3){group ->
         val groupSet = group.map(String::toSet)
         val (ruck1, ruck2, ruck3) = groupSet
-        val commonItem = ruck1.intersect(ruck2).intersect(ruck3)
+        val commonItem = ruck1 intersect ruck2 intersect ruck3
         commonItem.sumOf(Char::priority)
     }
 
