@@ -1,3 +1,5 @@
+package patriker.day01
+import patriker.utils.*
 fun main() {
     // test if implementation meets criteria from the description, like:
     val testInput = readInputText("Day01_test")

@@ -1,3 +1,5 @@
+package patriker.day02
+import patriker.utils.*
 operator fun String.component1(): Char { return this[0] }
 operator fun String.component2(): Char { return this[1] }
 operator fun String.component3(): Char { return this[2] }
@@ -34,16 +36,10 @@ fun Char.toHand(): Hand{
 }
 
 fun playGame(playerHand: Hand, opponentHand: Hand): GameResult{
-    val hands = playerHand to opponentHand
-
     val result = when{
-        hands.first == hands.second -> GameResult.DRAW
-        hands == Hand.ROCK to Hand.PAPER -> GameResult.LOSS
-        hands == Hand.ROCK to Hand.SCISSOR -> GameResult.WIN
-        hands == Hand.PAPER to Hand.SCISSOR -> GameResult.LOSS
-        hands == Hand.PAPER to Hand.ROCK -> GameResult.WIN
-        hands == Hand.SCISSOR to Hand.ROCK -> GameResult.LOSS
-        hands == Hand.SCISSOR to Hand.PAPER -> GameResult.WIN
+        playerHand == opponentHand -> GameResult.DRAW
+        playerHand.losesAgainst() == opponentHand -> GameResult.LOSS
+        playerHand.winsAgainst() == opponentHand -> GameResult.WIN
         else -> GameResult.DRAW
     }
     return result
