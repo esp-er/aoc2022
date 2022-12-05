@@ -11,25 +11,31 @@ fun main() {
 }
 
 fun solvePart1(input: List<String>): Int{
-    return input.asSequence().map{ elfPair ->
+    return input.count{ elfPair ->
         val pairs = elfPair.split(",")
-        val (firstStart, firstEnd) = pairs.first().split("-").map(String::toInt)
-        val (secondStart, secondEnd) = pairs.last().split("-").map(String::toInt)
+        val firstRange = pairs.first().toRange()
+        val secondRange = pairs.last().toRange()
 
-        (firstStart>= secondStart && firstEnd <= secondEnd) ||
-            (secondStart >= firstStart && secondEnd <= firstEnd)
-    }.count{it}
+        firstRange in secondRange || secondRange in firstRange
+    }
 }
 
 fun solvePart2(input: List<String>): Int{
-    return input.asSequence().map{ elfPair ->
+    return input.count{ elfPair ->
         val pairs = elfPair.split(",")
-        val (firstStart, firstEnd) = pairs.first().split("-").map(String::toInt)
-        val (secondStart, secondEnd) = pairs.last().split("-").map(String::toInt)
+        val firstRange = pairs.first().toRange()
+        val secondRange = pairs.last().toRange()
 
-        (firstStart in secondStart..secondEnd) ||
-                (secondStart in firstStart..firstEnd)
+        firstRange.first in secondRange ||  secondRange.first in firstRange
+    }
+}
 
-    }.count{it}
+fun String.toRange(): IntRange{
+     val (start, end) = split("-")
+     return start.toInt()..end.toInt()
+}
+
+operator fun IntRange.contains(other: IntRange): Boolean{
+   return other.first >= this.first && other.last <= this.last
 }
 
