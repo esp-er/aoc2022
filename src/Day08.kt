@@ -3,75 +3,106 @@ import patriker.utils.*
 
 fun main() {
     val testInput = readInput("Day08_test")
-    val testWidth = testInput.first().length
-    val testHeight = testInput.size
 
-    val testArr =
-        Array(testHeight) {
-            IntArray(testWidth)
-        }
-    testInput.forEachIndexed{ i, line ->
-        line.forEachIndexed{ j, digit ->
-            testArr[i][j] = "$digit".toInt()
-        }
-
-    }
+    val testGrid = createGridArray(testInput)
 
     val input = readInput("Day08_input")
-    val width = input.first().length
-    val height = input.size
+    val inputGrid = createGridArray(input)
 
+    println(solvePart1(testGrid))
+    println(solvePart1(inputGrid))
 
-    val inputArr =
-        Array(height) {
-            IntArray(width)
-        }
+    println("\nPart 2")
+    println(solvePart2(testGrid))
+    println(solvePart2(inputGrid))
+}
+
+fun createGridArray(input: List<String>): Array<IntArray>{
+    val grid = Array(input.size) {
+        IntArray(input.first().length)
+    }
     input.forEachIndexed{ i, line ->
-        line.forEachIndexed{ j, digit ->
-            inputArr[i][j] = "$digit".toInt()
+        line.forEachIndexed{ j, c ->
+            grid[i][j] = c.digitToInt()
         }
-
     }
 
-
-
-    println(solvePart1(testArr))
-    println(solvePart1(inputArr))
-
-    //println(solvePart1(input))
-    //println(solvePart2(input).sum())
+    return grid
 }
 
 fun isVisible(row: Int, col: Int, grid: Array<IntArray>): Boolean{
-
     if(row == 0 || row == grid.size-1)
         return true
     if(col == 0 || col == grid.first().size-1)
         return true
 
-    val tree = grid[row][col]
+    val treeHeight = grid[row][col]
 
-    val northNotVisible = (0 until row).any{ grid[it][col] >= tree }
-    val southNotVisible = (row + 1 until grid.size).any{ grid[it][col] >= tree }
-    val westNotVisible = (0 until col).any{ grid[row][it] >= tree }
-    val eastNotVisible = (col + 1 until grid[0].size).any{ grid[row][it] >= tree }
+    val northHidden = (0 until row).any{ grid[it][col] >= treeHeight }
+    if(!northHidden) return true
 
-    return !(northNotVisible && southNotVisible && westNotVisible && eastNotVisible)
+    val southHidden = (row + 1 until grid.size).any{ grid[it][col] >= treeHeight }
+    if(!southHidden) return true
 
+    val westHidden = (0 until col).any{ grid[row][it] >= treeHeight }
+    if(!westHidden) return true
+
+    val eastHidden = (col + 1 until grid[0].size).any{ grid[row][it] >= treeHeight }
+    if(!eastHidden) return true
+
+    return false
+}
+
+fun scenicScore(row: Int, col: Int, grid: Array<IntArray>): Int{
+    val northRange = (row -1 downTo  0 )
+    val southRange = (row + 1 until grid.size)
+    val westRange = (col - 1  downTo 0)
+    val eastRange = (col+ 1 until grid[0].size)
+
+    val treeHeight = grid[row][col]
+
+    var northVisible = 0
+    for(i in northRange){
+        northVisible++
+        if(grid[i][col] >= treeHeight)
+            break
+    }
+
+    var southVisible = 0
+    for(i in southRange){
+        southVisible++
+        if(grid[i][col] >= treeHeight)
+            break
+    }
+
+    var westVisible = 0
+    for(j in westRange){
+        westVisible++
+        if(grid[row][j] >= treeHeight)
+            break
+    }
+
+    var eastVisible = 0
+    for(j in eastRange){
+        eastVisible++
+        if(grid[row][j] >= treeHeight)
+            break
+    }
+    return northVisible * southVisible * westVisible * eastVisible
 }
 
 fun solvePart1(input: Array<IntArray>): Int{
-
     return input.indices.sumOf{ i ->
-        input[i].indices.count{j ->
+        input[i].indices.count{ j ->
             isVisible(i,j, input)
         }
     }
-
 }
 
-
-fun solvePart2(input: String): List<Int>{
-    TODO()
+fun solvePart2(input: Array<IntArray>): Int{
+    return input.indices.maxOf{ i ->
+        input[i].indices.maxOf{ j ->
+            scenicScore(i,j, input)
+        }
+    }
 }
-
