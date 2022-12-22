@@ -78,7 +78,7 @@ fun simulateFalling2(startPos: Pair<Int,Int>, blockedMap: HashSet<Pair<Int,Int>>
         }
     }
 
-    return if(currentPos.second > floorLevel) -1 to -1 else currentPos
+    return currentPos
 
 }
 
