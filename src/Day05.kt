@@ -44,6 +44,8 @@ fun parseLine(line: String): Triple<Int,Int,Int> {
 fun solvePart1(input: String): String{
     val (stacks, instructions) = input.split("\n\n")
 
+
+
     val numStacks = stacks.lines().last().filter{!it.isWhitespace()}.length
     val colPositions = stacks.lines().last().foldIndexed(emptyList<Int>()){ i, accum, c ->
         if(!c.isWhitespace()){

@@ -125,6 +125,3 @@ fun solvePart2(input: List<String>): Int{
 }
 
 
-
-
-

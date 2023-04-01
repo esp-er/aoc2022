@@ -13,6 +13,10 @@ fun readInputText(name: String) = File("src", "$name")
     .readText()
 
 
+fun readResource(path: String): List<String> =
+    object {}.javaClass.getResource(path)!!.readText().lines()
+
+
 fun getResourceAsText(path: String): String? =
     object {}.javaClass.getResource(path)?.readText()
 

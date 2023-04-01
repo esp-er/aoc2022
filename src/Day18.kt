@@ -64,27 +64,6 @@ fun Pos3.hasWayOut(lavaPositions: HashSet<Pos3>, bounds: Bounds3, visited: HashS
     return toVisit.any { p -> p.hasWayOut(lavaPositions, bounds, visited) }
 }
 
-fun Pos3.pathOut(lavaPositions: HashSet<Pos3>, bounds: Bounds3,
-                 visited: HashSet<Pos3> = HashSet(),
-                 toVisit: HashSet<Pos3> = HashSet(),
-                 path: HashSet<Pos3> = HashSet()): Pair<Boolean, HashSet<Pos3>> {
-
-    if(this.outOfBounds(bounds))
-        return true to path
-
-    val adjPositions = this.adjacentPositions
-    val toVisit = adjPositions.filter{it !in lavaPositions && it !in visited}
-
-    if(toVisit.isEmpty()) {
-        return false to HashSet()
-    }
-
-    visited.addAll(toVisit + this)
-    path.add(this)
-
-    val ret = toVisit.map{ p -> p.pathOut(lavaPositions, bounds, visited, path) }.firstOrNull{it.first}
-    return if(ret != null) ret else false to HashSet()
-}
 
 fun solvePart2(input: List<String>): Int{
     val lavaPositions = inputToSet(input)
@@ -108,6 +87,8 @@ fun solvePart2(input: List<String>): Int{
         it.hasWayOut(lavaPositions, Bounds3(xRange, yRange, zRange))
     }
 
+
+    //val bubbleSurface = surfaceArea( bubblePositions.toHashSet())
     val bubbleSurface = surfaceArea( bubblePositions.toHashSet())
 
     return surfaceArea(lavaPositions) - bubbleSurface

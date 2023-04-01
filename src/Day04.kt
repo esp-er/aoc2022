@@ -5,10 +5,18 @@ fun main() {
     val testInput = readInput("Day04_test")
     val input = readInput("Day04_input")
 
+    check(solvePart1(te   check(solvePart1(testInput) == 2)
+            println(solvePart1(input))
+            println(solvePart2(input))
+}
+
+fun solvePart1(input: List<String>): Int{
     check(solvePart1(testInput) == 2)
     println(solvePart1(input))
     println(solvePart2(input))
 }
+
+
 
 fun solvePart1(input: List<String>): Int{
     return input.count{ elfPair ->
