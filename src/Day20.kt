@@ -4,7 +4,6 @@ import patriker.utils.*
 
 import java.util.LinkedList
 
-data class Node(val value: Int, var next: Int)
 
 fun main(){
     val testInput = readInput("Day20_test")
@@ -53,7 +52,7 @@ fun solvePart1(input: List<String>): Int{
 
     }
 
-    var zeroidx =  0
+    var zeroidx = 0
     coords.forEachIndexed{ idx, p ->
         if(p.second ==0)
             zeroidx = idx
