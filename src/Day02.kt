@@ -80,6 +80,7 @@ fun solvePart2(inputList: List<String>): Int{
         val gameResult = playGame(playerHand, opponentHand)
         calcPlayerScore(playerHand, gameResult)
     }
+
     return gamesScores.sum()
 }
 

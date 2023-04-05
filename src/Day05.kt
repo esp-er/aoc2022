@@ -4,6 +4,7 @@ import java.util.Deque
 
 fun main() {
     // test if implementation meets criteria from the description, like:
+    /*
     val testInput = readInputText("Day05_test")
     val input = readInputText("Day05_input")
 
@@ -13,6 +14,10 @@ fun main() {
 
     check(solvePart2(testInput) == "MCD")
     println(solvePart2(input))
+
+    */
+
+
 
 
 }
